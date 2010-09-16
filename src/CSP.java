@@ -59,19 +59,22 @@ public class CSP {
 	 * @return The row at which there is the least amount of conflicts
 	 */
 	public int minConflicts(Amazon amazon) {
+		ArrayList<Integer> lista = new ArrayList<Integer>();
 		int conflicts = board;
-		int row = -1;
 		for (int i = 0; i < board; ++i) {
-
 			if (i != amazon.getRow()) {
 				int tmp = numConflicts(amazon, i);
 				if (tmp <= conflicts) {
+					if (tmp != conflicts) {
+						lista.clear();
+					}
+					lista.add(i);
 					conflicts = tmp;
-					row = i;
 				}
 			}
 		}
-		return row;
+		Collections.shuffle(lista);
+		return lista.get(0);
 	}
 	
 	/**

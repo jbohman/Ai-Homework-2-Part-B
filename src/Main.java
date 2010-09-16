@@ -30,7 +30,7 @@ public class Main {
 		}
 		else {
 			long start = System.currentTimeMillis();
-			CSP csp = new CSP((short)20);
+			CSP csp = new CSP((short)1000);
 			System.out.println(minConflicts(csp, (short)1000) + "\t took " + 
 					(System.currentTimeMillis()-start));
 		}
@@ -45,30 +45,22 @@ public class Main {
 		
 		for (short i = 0; i < maxSteps; ++i) {
 			if (csp.solution()) {
-//				System.out.println("found a sollution");
 				return i;
 			}
 			
 			shuffle(shuffleList);
 			
 			for (short n = 0; n < csp.board; ++n) {
-//				System.out.println("shuffleList[" + n + "] = " + shuffleList[n]);
 				if (csp.isConflicted(shuffleList[n])) {
 					short moveTo = csp.minConflicts(shuffleList[n]);
 					
-//					System.out.println("csp.matrix[" + shuffleList[n] + "]  = "
-//							+ moveTo + " (prev: " + csp.matrix[shuffleList[n]]
-//							+ ")");
-					
 					csp.matrix[shuffleList[n]] = moveTo;
 					
-//					System.out.println(csp);
-//					System.out.println("break");
+
 //					break;
 				}
 			}	
 		}
-//		System.out.println(csp);
 		return -1;
 	}
 	

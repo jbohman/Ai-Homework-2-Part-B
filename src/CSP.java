@@ -23,7 +23,7 @@ public class CSP {
 		System.out.println(this);
 		
 		constraints = new ArrayList<Constraint>();
-		//constraints.add(new BoxConstraint());
+		constraints.add(new BoxConstraint());
 		constraints.add(new RowConstraint());
 		constraints.add(new DiaConstraint());
 		conflicts = new ArrayList<Amazon>();

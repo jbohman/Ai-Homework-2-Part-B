@@ -18,11 +18,9 @@ public class CSP {
 		variables = new ArrayList<Amazon>();
 		
 		for (int i = 0; i < board; ++i) {
-//			variables.add(new Amazon((int)(Math.random()*board), i));
 			variables.add(new Amazon((i*3)%board, i));
 		}
 		
-//		System.out.println(this);
 		
 		constraints = new ArrayList<Constraint>();
 		constraints.add(new BoxConstraint());

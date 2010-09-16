@@ -1,6 +1,8 @@
+import java.util.Collections;
+
 public class Main {
 	
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 	
 	/**
 	 * @param args
@@ -11,18 +13,20 @@ public class Main {
 	
 	public Main() {
 		if (!DEBUG) {
-			for (int i = 10; i <= 100; i += 10) {
+			for (int i = 10; i <= 1000; i += 10) {
 				int fails = 0;
+				long start = System.currentTimeMillis();
 				for (int j = 0; j < 10; ++j) {
 					CSP csp = new CSP(i);
-					if (minConflicts(csp, 100) == null)
+					if (minConflicts(csp, 1000) == null)
 						fails++;
 				}
-				System.out.println(i + ":\t" + fails);
+				System.out.println(i + ":\t" + fails + " took " + 
+						(System.currentTimeMillis()-start));
 			}
 		}
 		else {
-			CSP csp = new CSP(12);
+			CSP csp = new CSP(300);
 			System.out.println(minConflicts(csp, 1000));
 		}
 	}
@@ -31,12 +35,19 @@ public class Main {
 		for (int i = 0; i < maxSteps; ++i) {
 			if (csp.solution())
 				return csp;
+			Collections.shuffle(csp.variables);
 			
-			Amazon var = csp.variables.get((int) (Math.random() * csp.variables.size()));
-			while(!csp.isConflicted(var)) {
-				var = csp.variables.get((int) (Math.random() * csp.variables.size()));
+			for (Amazon amazon : csp.variables) {
+				if (csp.isConflicted(amazon)) { // TODO performance?
+					amazon.setRow(csp.minConflicts(amazon));
+					break;
+				}
 			}
-			var.setRow(csp.minConflicts(var));
+//			Amazon var = csp.variables.get((int) (Math.random() * csp.variables.size()));
+//			while(!csp.isConflicted(var)) {
+//				var = csp.variables.get((int) (Math.random() * csp.variables.size()));
+//			}
+//			var.setRow(csp.minConflicts(var));
 		}
 		if (DEBUG) {
 			System.out.println("Failed");
@@ -46,7 +57,7 @@ public class Main {
 					System.out.println(csp.variables.get(i));
 				}
 			}
-			System.out.println(csp);
+//			System.out.println(csp);
 		}
 		return null;
 	}

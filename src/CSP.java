@@ -4,10 +4,13 @@ import java.util.*;
 public class CSP {
 	public int board;
 	
-	private ArrayList<Constraint> constraints;
 	public ArrayList<Amazon> variables;
 	
 	private ArrayList<Amazon> conflicts;
+
+	private BoxConstraint box;
+	private RowConstraint rowConst;
+	private DiaConstraint dia;
 	
 	public ArrayList<Amazon> getConflicts() {
 		return conflicts;
@@ -22,11 +25,10 @@ public class CSP {
 		}
 		
 		
-		constraints = new ArrayList<Constraint>();
-		constraints.add(new BoxConstraint());
-		constraints.add(new RowConstraint());
-//		constraints.add(new ColConstraint());
-		constraints.add(new DiaConstraint());
+		box = new BoxConstraint();
+		rowConst = new RowConstraint();
+		dia = new DiaConstraint();
+		
 		conflicts = new ArrayList<Amazon>();
 	}
 	public boolean solution() {
@@ -44,11 +46,12 @@ public class CSP {
 	public boolean isConflicted(Amazon amazon) {
 		for (Amazon other : variables) {
 			if (other != amazon) {
-				for (Constraint constraint : constraints) {
-					if (!constraint.isValid(amazon, other)) {
-						return true;
-					}
-				}			
+				if (!rowConst.isValid(amazon, other))
+					return true;
+				if (!box.isValid(amazon, other))
+					return true;
+				if (!dia.isValid(amazon, other))
+					return true;		
 			}
 		}
 		return false;
@@ -90,11 +93,12 @@ public class CSP {
 		
 		for (Amazon other : variables) {
 			if (other != amazon) {
-				for (Constraint constraint : constraints) {
-					if (!constraint.isValid(amazon, other)) {
-						conflict++;
-					}
-				}
+				if (!box.isValid(amazon, other))
+					conflict++;
+				if (!dia.isValid(amazon, other))
+					conflict++;
+				if (!rowConst.isValid(amazon, other))
+					conflict++;
 			}
 		}
 		amazon.setRow(prevRow);
@@ -114,10 +118,6 @@ public class CSP {
 			tmp += "\t" + variables.get(i);
 			tmp += "\n";
 		}
-//		for (Amazon a : variables) {
-//			
-//			tmp += a.toString() + "\n";
-//		}
 		return tmp;
 	}
 }

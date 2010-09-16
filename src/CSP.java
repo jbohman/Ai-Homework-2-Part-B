@@ -17,7 +17,7 @@ public class CSP {
 		variables = new ArrayList<Amazon>();
 		
 		for (int i = 0; i < board; ++i) {
-			variables.add(new Amazon(0, i));
+			variables.add(new Amazon((int)(Math.random()*board), i));
 		}
 		
 		System.out.println(this);
@@ -25,7 +25,6 @@ public class CSP {
 		constraints = new ArrayList<Constraint>();
 		//constraints.add(new BoxConstraint());
 		constraints.add(new RowConstraint());
-		constraints.add(new ColConstraint());
 		constraints.add(new DiaConstraint());
 		conflicts = new ArrayList<Amazon>();
 	}
@@ -63,12 +62,13 @@ public class CSP {
 		int conflicts = board;
 		int row = -1;
 		for (int i = 0; i < board; ++i) {
-			if(i != amazon.getRow()) {
+
+			if (i != amazon.getRow()) {
 				int tmp = numConflicts(amazon, i);
-			 	if (tmp <= conflicts) {
-			 		conflicts = tmp;
+				if (tmp <= conflicts) {
+					conflicts = tmp;
 					row = i;
-			 	}
+				}
 			}
 		}
 		return row;
@@ -101,13 +101,13 @@ public class CSP {
 		String tmp = "";
 		for (int i = 0; i < board; ++i) {
 			for (int j = 0; j < board; ++j) {
-				if (variables.get(j).getRow() == i) {
+				if (variables.get(j).getRow() == i && variables.get(j).getCol() == j) {
 					tmp += "A ";
 				}
 				else
 					tmp += ". ";
 			}
-//			tmp += "\t" + variables.get(i);
+			tmp += "\t" + variables.get(i);
 			tmp += "\n";
 		}
 //		for (Amazon a : variables) {

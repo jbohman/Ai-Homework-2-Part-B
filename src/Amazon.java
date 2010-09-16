@@ -15,9 +15,6 @@ public class Amazon {
 	public int getCol() {
 		return col;
 	}
-//	public void setCol(int col) {
-//		this.col = col;
-//	}
 	public String toString() {
 		return row + ", " + col;
 	}

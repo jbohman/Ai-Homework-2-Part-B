@@ -4,7 +4,7 @@ import java.util.*;
 public class CSP {
 	private int board;
 	private ArrayList<Constraint> constraints;
-	private ArrayList<Amazon> variables;
+	public ArrayList<Amazon> variables;
 	
 	private ArrayList<Amazon> conflicts;
 	
@@ -17,24 +17,41 @@ public class CSP {
 		variables = new ArrayList<Amazon>();
 		
 		for (int i = 0; i < board; ++i) {
-			variables.add(new Amazon(i, i));
+			variables.add(new Amazon(0, i));
 		}
 		
 		System.out.println(this);
 		
 		constraints = new ArrayList<Constraint>();
-		constraints.add(new BoxConstraint());
+		//constraints.add(new BoxConstraint());
 		constraints.add(new RowConstraint());
 		constraints.add(new ColConstraint());
 		constraints.add(new DiaConstraint());
 		conflicts = new ArrayList<Amazon>();
-		updateConflicts();
-		
 	}
 	public boolean solution() {
-		if (conflicts.size() > 0)
-			return false;
+		for (int i = 0; i < board; ++i) {
+			if(isConflicted(variables.get(i))) {
+				return false;
+			}
+		}
 		return true;
+	}
+	
+	/**
+	 * 
+	 */
+	public boolean isConflicted(Amazon amazon) {
+		for (Amazon other : variables) {
+			if (other != amazon) {
+				for (Constraint constraint : constraints) {
+					if (!constraint.isValid(amazon, other)) {
+						return true;
+					}
+				}			
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -44,13 +61,15 @@ public class CSP {
 	 */
 	public int minConflicts(Amazon amazon) {
 		int conflicts = board;
-		int row = 0;
+		int row = -1;
 		for (int i = 0; i < board; ++i) {
-			 int tmp = numConflicts(amazon, i);
-			 if (tmp < conflicts) {
-				 conflicts = tmp;
-				 row = i;
-			 }
+			if(i != amazon.getRow()) {
+				int tmp = numConflicts(amazon, i);
+			 	if (tmp <= conflicts) {
+			 		conflicts = tmp;
+					row = i;
+			 	}
+			}
 		}
 		return row;
 	}
@@ -60,7 +79,7 @@ public class CSP {
 	 * @param row The row we want to change
 	 * @return
 	 */
-	private int numConflicts(Amazon amazon, int row) {
+	public int numConflicts(Amazon amazon, int row) {
 		int conflict = 0;
 		int prevRow = amazon.getRow();
 		amazon.setRow(row);
@@ -77,38 +96,16 @@ public class CSP {
 		amazon.setRow(prevRow);
 		return conflict;
 	}
-
-	public void newRow(Amazon conflict, int row) {
-		conflict.setRow(row);
-		updateConflicts();
-	}
-	private void updateConflicts() {
-		conflicts.clear();
-		for (Amazon a : variables) {
-			for (Amazon b : variables) {
-				if (a != b) {
-					for (Constraint constraint : constraints) {
-						if (!constraint.isValid(a, b)) {
-							if (!conflicts.contains(a))
-								conflicts.add(a);
-							if (!conflicts.contains(b))
-								conflicts.add(b);
-						}	
-					}
-				}
-			}
-		}
-	}
 	
 	public String toString() {
 		String tmp = "";
 		for (int i = 0; i < board; ++i) {
 			for (int j = 0; j < board; ++j) {
-				if (variables.get(i).getRow() == j) {
-					tmp += "A";
+				if (variables.get(j).getRow() == i) {
+					tmp += "A ";
 				}
 				else
-					tmp += ".";
+					tmp += ". ";
 			}
 //			tmp += "\t" + variables.get(i);
 			tmp += "\n";

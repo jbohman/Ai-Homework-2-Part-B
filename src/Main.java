@@ -10,20 +10,21 @@ public class Main {
 	
 	public Main() {
 		CSP csp = new CSP(12);
-		System.out.println(minConflicts(csp, 100000));
+		System.out.println(minConflicts(csp, 1000));
 	}
 	
 	private CSP minConflicts(CSP csp, int maxSteps) {
 		for (int i = 0; i < maxSteps; ++i) {
-//			System.out.println("new Loop: " + i);
 			if (csp.solution())
 				return csp;
 			
-			Amazon conflict = csp.getConflicts().get((int) (Math.random()*csp.getConflicts().size()));
-			int row = csp.minConflicts(conflict);
-			csp.newRow(conflict, row);
+			Amazon var = csp.variables.get((int) (Math.random() * csp.variables.size()));
+			while(!csp.isConflicted(var)) {
+				var = csp.variables.get((int) (Math.random() * csp.variables.size()));
+			}
+			var.setRow(csp.minConflicts(var));
 		}
-		System.out.println("fail");
+		System.out.println("Failed");
 		return csp;
 	}
 }

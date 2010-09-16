@@ -1,8 +1,11 @@
 import java.util.Collections;
+import java.util.Random;
+
 
 public class Main {
-	
-	private boolean DEBUG = false;
+	static Random rng = new Random();
+
+	private boolean DEBUG = true;
 	
 	/**
 	 * @param args
@@ -16,9 +19,9 @@ public class Main {
 			for (int i = 10; i <= 1000; i += 10) {
 				int fails = 0;
 				long start = System.currentTimeMillis();
-				for (int j = 0; j < 10; ++j) {
+				for (int j = 0; j < 1; ++j) {
 					CSP csp = new CSP(i);
-					if (minConflicts(csp, 1000) == null)
+					if (minConflicts(csp, 1000) == -1)
 						fails++;
 				}
 				System.out.println(i + ":\t" + fails + " took " + 
@@ -26,39 +29,60 @@ public class Main {
 			}
 		}
 		else {
-			CSP csp = new CSP(300);
-			System.out.println(minConflicts(csp, 1000));
+			long start = System.currentTimeMillis();
+			CSP csp = new CSP(1000);
+			System.out.println(minConflicts(csp, 1000) + "\t took " + 
+					(System.currentTimeMillis()-start));
 		}
 	}
 	
-	private CSP minConflicts(CSP csp, int maxSteps) {
+	private int minConflicts(CSP csp, int maxSteps) {
+		
+		int shuffleList[] = new int[csp.board];
+		for (int i = 0; i < csp.board; ++i) {
+			shuffleList[i] = i;
+		}
+		
 		for (int i = 0; i < maxSteps; ++i) {
-			if (csp.solution())
-				return csp;
-			Collections.shuffle(csp.variables);
-			
-			for (Amazon amazon : csp.variables) {
-				if (csp.isConflicted(amazon)) { // TODO performance?
-					amazon.setRow(csp.minConflicts(amazon));
-					break;
-				}
+			if (csp.solution()) {
+//				System.out.println("found a sollution");
+				return i;
 			}
-//			Amazon var = csp.variables.get((int) (Math.random() * csp.variables.size()));
-//			while(!csp.isConflicted(var)) {
-//				var = csp.variables.get((int) (Math.random() * csp.variables.size()));
-//			}
-//			var.setRow(csp.minConflicts(var));
-		}
-		if (DEBUG) {
-			System.out.println("Failed");
 			
-			for (int i = 0; i < csp.board; ++i) {
-				if(csp.isConflicted(csp.variables.get(i))) {
-					System.out.println(csp.variables.get(i));
+			shuffle(shuffleList);
+			
+			for (int n = 0; n < csp.board; ++n) {
+//				System.out.println("shuffleList[" + n + "] = " + shuffleList[n]);
+				if (csp.isConflicted(shuffleList[n])) {
+					int moveTo = csp.minConflicts(shuffleList[n]);
+					
+//					System.out.println("csp.matrix[" + shuffleList[n] + "]  = "
+//							+ moveTo + " (prev: " + csp.matrix[shuffleList[n]]
+//							+ ")");
+					
+					csp.matrix[shuffleList[n]] = moveTo;
+					
+//					System.out.println(csp);
+//					System.out.println("break");
+//					break;
 				}
-			}
-//			System.out.println(csp);
+			}	
 		}
-		return null;
+//		System.out.println(csp);
+		return -1;
 	}
+	
+
+	public static void shuffle(int[] array) {
+	    // i is the number of items remaining to be shuffled.
+	    for (int i = array.length; i > 1; i--) {
+	        // Pick a random element to swap with the i-th element.
+	        int j = rng.nextInt(i);  // 0 <= j <= i-1 (0-based array)
+	        // Swap array elements.
+	        int tmp = array[j];
+	        array[j] = array[i-1];
+	        array[i-1] = tmp;
+	    }
+	}
+
 }

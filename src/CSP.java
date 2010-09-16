@@ -2,24 +2,22 @@ import java.util.*;
 
 
 public class CSP {
-	public int board;
+	public short board;
 
-	int matrix[];
+	short matrix[];
 
-	public CSP(int board) {
+	public CSP(short board) {
 		this.board = board;
 		
-		matrix = new int[board];
+		matrix = new short[board];
 		
-		for (int i = 0; i < board; ++i) {
-			matrix[i] = (i * 3) % board;
-//			matrix[i] = i;
+		for (short i = 0; i < board; ++i) {
+			matrix[i] = (short)((i * 3) % board);
 		}
-//		System.out.println(this);
 	}
 	
 	public boolean solution() {
-		for (int i = 0; i < board; ++i) {
+		for (short i = 0; i < board; ++i) {
 			if (isConflicted(i))
 				return false;
 		}
@@ -29,8 +27,8 @@ public class CSP {
 	/**
 	 * 
 	 */
-	public boolean isConflicted(int col) {
-		for (int i = 0; i < board; ++i) {
+	public boolean isConflicted(short col) {
+		for (short i = 0; i < board; ++i) {
 			if (!equal(i, col)) {
 				if (conflicts(col, matrix[col], i, matrix[i]))
 					return true;
@@ -39,7 +37,7 @@ public class CSP {
 		return false;
 	}
 	
-	public boolean equal(int aCol, int bCol) {
+	public boolean equal(short aCol, short bCol) {
 		if (aCol == bCol && matrix[aCol] == matrix[bCol])
 			return true;
 		return false;
@@ -50,15 +48,14 @@ public class CSP {
 	 * @param amazon
 	 * @return The row at which there is the least amount of conflicts
 	 */
-	public int minConflicts(int col) {
-		ArrayList<Integer> lista = new ArrayList<Integer>();
-		int conflicts = Integer.MAX_VALUE;
+	public short minConflicts(short col) {
+		ArrayList<Short> lista = new ArrayList<Short>();
+		short conflicts = Short.MAX_VALUE;
 		
-		for (int i = 0; i < board; ++i) {
+		for (short i = 0; i < board; ++i) {
 			if (i != matrix[col]) {
 				
-				int tmp = numConflicts(col, i);
-//				System.out.println(tmp + " <= " + conflicts);
+				short tmp = numConflicts(col, i);
 				if (tmp <= conflicts) {
 					if (tmp != conflicts) {
 						lista.clear();
@@ -68,19 +65,14 @@ public class CSP {
 				}
 			}
 		}
-//		lista.remove((Integer)matrix[col]);
-//		for (Integer asdf : lista) {
-//			System.out.print(asdf + ", ");
-//		}
-//		System.out.println();
-		return lista.get((int)(Math.random()*lista.size()));
+		return lista.get((short)(Math.random()*lista.size()));
 	}
 	
 
-	public int numConflicts(int col, int newRow) {
-		int conflict = 0;
+	public short numConflicts(short col, short newRow) {
+		short conflict = 0;
 		
-		for (int i = 0; i < board; ++i) {
+		for (short i = 0; i < board; ++i) {
 			if (matrix[i] != matrix[col]) {
 				conflict += numConflicts(col, newRow, i, matrix[i]);
 			}
@@ -90,7 +82,7 @@ public class CSP {
 	}
 	
 	
-	boolean conflicts(int aCol, int aRow, int bCol, int bRow) {
+	boolean conflicts(short aCol, short aRow, short bCol, short bRow) {
 		// row
 		if (aRow == bRow)
 			return true;
@@ -106,7 +98,7 @@ public class CSP {
 		return false;
 	}
 	
-	byte numConflicts(int aCol, int aRow, int bCol, int bRow) {
+	byte numConflicts(short aCol, short aRow, short bCol, short bRow) {
 		byte tmp = 0;
 		// row
 		if (aRow == bRow)
@@ -125,8 +117,8 @@ public class CSP {
 	
 	public String toString() {
 		String tmp = "";
-		for (int i = 0; i < board; ++i) {
-			for (int j = 0; j < board; ++j) {
+		for (short i = 0; i < board; ++i) {
+			for (short j = 0; j < board; ++j) {
 				if (matrix[i] == j)
 					tmp += "A ";
 				else

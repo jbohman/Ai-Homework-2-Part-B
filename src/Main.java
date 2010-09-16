@@ -16,12 +16,12 @@ public class Main {
 	
 	public Main() {
 		if (!DEBUG) {
-			for (int i = 10; i <= 1000; i += 10) {
-				int fails = 0;
+			for (short i = 10; i <= 1000; i += 10) {
+				short fails = 0;
 				long start = System.currentTimeMillis();
-				for (int j = 0; j < 1; ++j) {
+				for (short j = 0; j < 1; ++j) {
 					CSP csp = new CSP(i);
-					if (minConflicts(csp, 1000) == -1)
+					if (minConflicts(csp, (short)1000) == -1)
 						fails++;
 				}
 				System.out.println(i + ":\t" + fails + " took " + 
@@ -30,20 +30,20 @@ public class Main {
 		}
 		else {
 			long start = System.currentTimeMillis();
-			CSP csp = new CSP(1000);
-			System.out.println(minConflicts(csp, 1000) + "\t took " + 
+			CSP csp = new CSP((short)20);
+			System.out.println(minConflicts(csp, (short)1000) + "\t took " + 
 					(System.currentTimeMillis()-start));
 		}
 	}
 	
-	private int minConflicts(CSP csp, int maxSteps) {
+	private short minConflicts(CSP csp, short maxSteps) {
 		
-		int shuffleList[] = new int[csp.board];
-		for (int i = 0; i < csp.board; ++i) {
+		short shuffleList[] = new short[csp.board];
+		for (short i = 0; i < csp.board; ++i) {
 			shuffleList[i] = i;
 		}
 		
-		for (int i = 0; i < maxSteps; ++i) {
+		for (short i = 0; i < maxSteps; ++i) {
 			if (csp.solution()) {
 //				System.out.println("found a sollution");
 				return i;
@@ -51,10 +51,10 @@ public class Main {
 			
 			shuffle(shuffleList);
 			
-			for (int n = 0; n < csp.board; ++n) {
+			for (short n = 0; n < csp.board; ++n) {
 //				System.out.println("shuffleList[" + n + "] = " + shuffleList[n]);
 				if (csp.isConflicted(shuffleList[n])) {
-					int moveTo = csp.minConflicts(shuffleList[n]);
+					short moveTo = csp.minConflicts(shuffleList[n]);
 					
 //					System.out.println("csp.matrix[" + shuffleList[n] + "]  = "
 //							+ moveTo + " (prev: " + csp.matrix[shuffleList[n]]
@@ -73,13 +73,13 @@ public class Main {
 	}
 	
 
-	public static void shuffle(int[] array) {
+	public static void shuffle(short[] array) {
 	    // i is the number of items remaining to be shuffled.
 	    for (int i = array.length; i > 1; i--) {
 	        // Pick a random element to swap with the i-th element.
-	        int j = rng.nextInt(i);  // 0 <= j <= i-1 (0-based array)
+	        short j = (short) rng.nextInt(i);  // 0 <= j <= i-1 (0-based array)
 	        // Swap array elements.
-	        int tmp = array[j];
+	        short tmp = array[j];
 	        array[j] = array[i-1];
 	        array[i-1] = tmp;
 	    }

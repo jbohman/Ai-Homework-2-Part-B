@@ -20,6 +20,8 @@ public class CSP {
 			variables.add(new Amazon(i, i));
 		}
 		
+		System.out.println(this);
+		
 		constraints = new ArrayList<Constraint>();
 		constraints.add(new BoxConstraint());
 		constraints.add(new RowConstraint());
@@ -100,9 +102,21 @@ public class CSP {
 	
 	public String toString() {
 		String tmp = "";
-		for (Amazon a : variables) {
-			tmp += a.toString() + "\n";
+		for (int i = 0; i < board; ++i) {
+			for (int j = 0; j < board; ++j) {
+				if (variables.get(i).getRow() == j) {
+					tmp += "A";
+				}
+				else
+					tmp += ".";
+			}
+//			tmp += "\t" + variables.get(i);
+			tmp += "\n";
 		}
+//		for (Amazon a : variables) {
+//			
+//			tmp += a.toString() + "\n";
+//		}
 		return tmp;
 	}
 }

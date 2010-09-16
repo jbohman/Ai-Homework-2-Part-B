@@ -2,7 +2,8 @@ import java.util.*;
 
 
 public class CSP {
-	private int board;
+	public int board;
+	
 	private ArrayList<Constraint> constraints;
 	public ArrayList<Amazon> variables;
 	
@@ -17,14 +18,16 @@ public class CSP {
 		variables = new ArrayList<Amazon>();
 		
 		for (int i = 0; i < board; ++i) {
-			variables.add(new Amazon((int)(Math.random()*board), i));
+//			variables.add(new Amazon((int)(Math.random()*board), i));
+			variables.add(new Amazon((i*3)%board, i));
 		}
 		
-		System.out.println(this);
+//		System.out.println(this);
 		
 		constraints = new ArrayList<Constraint>();
 		constraints.add(new BoxConstraint());
 		constraints.add(new RowConstraint());
+//		constraints.add(new ColConstraint());
 		constraints.add(new DiaConstraint());
 		conflicts = new ArrayList<Amazon>();
 	}
